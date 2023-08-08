@@ -1,11 +1,8 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
-# Create your models here.
 class Costfinder(models.Model):
-    area = models.IntegerField()
+    area = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
     class Meta:
         verbose_name_plural = "Costfinder"
-
-    # def __str__(self):
-    #     return self # You can customize this as needed

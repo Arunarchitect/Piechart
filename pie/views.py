@@ -8,6 +8,7 @@ from django.conf import settings
 def h(request):
     if request.method == 'POST':
         form = CostfinderForm(request.POST)
+       
         if form.is_valid():
             # Delete previous data entry
             Costfinder.objects.all().delete()
