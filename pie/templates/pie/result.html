@@ -4,14 +4,14 @@
 <head>
     <title>Result</title>
 </head>
+{% load static %}
 {% block content %}
 <body>
-    {% load static %}
     <h1>Result</h1>
-    <h2>For a total area of {{ area }} square feet, it will cost Rs.{{cost}} and the split up is shown below.</h2>
-    <!-- Display the image using the 'image_url' variable -->
-    <img src="{% static "pie/image.png" %}" alt="Pie Chart">
-
+    <h2>For a total area of {{ area }} square feet, it will cost Rs.{{ cost }} and the split up is shown below.</h2>
+    
+    <img src="{{ image_url }}" alt="Pie Chart">
+    
     <!-- Back button to go back to the home page -->
     <a href="{% url 'home' %}">Back to Home</a>
 </body>

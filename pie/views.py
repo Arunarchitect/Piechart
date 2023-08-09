@@ -14,26 +14,31 @@ def h(request):
             Costfinder.objects.all().delete()
 
             # Delete previous image if it exists
-            previous_image_path = 'pie/static/pie/image.png'  # Replace with the actual path used before
-            if os.path.exists(previous_image_path):
-                os.remove(previous_image_path)
+            # previous_costfinder = Costfinder.objects.first()
+            # if previous_costfinder and previous_costfinder.image:
+            #     previous_costfinder.image.delete()  # Delete the associated image file
+            #     previous_costfinder.delete()  # Delete the database entry
 
             # Create and save the new pie chart image
-            
-            # Combine the prefixes with the values and format them to 2 decimal places
-            
-
             cleaned_data = form.cleaned_data
-            d = cleaned_data['area']
-            c= d*3000
-            x = [0.10 * c, 0.10 * c, 0.10 * c, 0.25 * c, 0.25 * c, 0.20 * c]
-            prefixes = ['electrical_cost:', 'plumbing_cost:', 'Furnishing_cost:', 'structural_cost:', 'finishes_cost:', 'other_costs:']
+            area = cleaned_data['area']
+            cost = area * 3000
+            x = [0.10 * cost, 0.10 * cost, 0.10 * cost, 0.25 * cost, 0.25 * cost, 0.20 * cost]
+            prefixes = ['Electrical Cost: ', 'Plumbing Cost: ', 'Furnishing Cost: ', 'Structural Cost: ', 'Finishes Cost: ', 'Other Costs: ']
             x_ = [int(val) for val in x]
 
             labels = [f'{prefix}{val}' for prefix, val in zip(prefixes, x_)]
             plt.pie(x, labels=labels)
-            plt.savefig( 'pie/static/pie/image.png')  # Save the new plot as an image
+
+            # Save the new plot as an image in the media directory
+            image_path = os.path.join(settings.MEDIA_ROOT, 'image.png')
+            plt.savefig(image_path)
             plt.close()  # Close the plot to release resources
+
+            # Save the image path to the 'image' field of the Costfinder model
+            # new_costfinder = Costfinder.objects.create(area=area)
+            # new_costfinder.image = 'image.png'
+            # new_costfinder.save()
 
             form.save()
             return redirect('result')  # Redirect to a success page after form submission
@@ -42,9 +47,23 @@ def h(request):
     return render(request, "pie/home.html", {'form': form})
 
 
+
 def r(request):
     first_costfinder_entry = Costfinder.objects.first()
-    area = first_costfinder_entry.area
-    c = area*3000
-    return render(request, 'pie/result.html', {'area': area,'cost':c})
 
+    if first_costfinder_entry and first_costfinder_entry.image:
+        area = first_costfinder_entry.area
+        cost = area * 3000
+        image_url = "/media/image.png"
+    else:
+        area = 0
+        cost = 0
+        image_url = None
+
+    context = {
+        'area': area,
+        'cost': cost,
+        'image_url': image_url,
+    }
+
+    return render(request, 'pie/result.html', context)
