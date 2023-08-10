@@ -1,12 +1,55 @@
-<!-- pie/result.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #3366cc;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #666;
+            margin-top: 0;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #3366cc;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media screen and (max-width: 600px) {
+            h2 {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
-{% load static %}
-{% block content %}
 <body>
+    {% load static %}
+    {% block content %}
     <h1>Result</h1>
     <h2>For a total area of {{ area }} square feet, it will cost Rs.{{ cost }} and the split up is shown below.</h2>
     
@@ -14,6 +57,6 @@
     
     <!-- Back button to go back to the home page -->
     <a href="{% url 'home' %}">Back to Home</a>
+    {% endblock content %}
 </body>
-{% endblock content %}
 </html>
