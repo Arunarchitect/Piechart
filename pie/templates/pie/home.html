@@ -16,12 +16,17 @@
         }
 
         h1 {
-            color: #3366cc;
+            color: #040d1f;
             margin-bottom: 10px;
         }
 
         h2 {
             color: #666;
+            margin-top: 0;
+        }
+        
+        h3 {
+            color: #180658;
             margin-top: 0;
         }
 
@@ -65,8 +70,9 @@
     </style>
 </head>
 <body>
-    <h1>Find your Project Cost</h1>
-    <h2>Please enter your total built-up area in square feet</h2>
+    <h1>Instant Solutions for your Architectural Concerns</h1>
+    <h2>Find your Project Cost</h2>
+    <h3>Please enter your total built-up area in square feet</h3>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
