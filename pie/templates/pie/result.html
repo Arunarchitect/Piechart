@@ -51,7 +51,7 @@
     {% load static %}
     {% block content %}
     <h1>Result</h1>
-    <h2>For a total area of {{ area }} square feet, it will cost Rs.{{ cost }} and the split up is shown below.</h2>
+    <h2>For a total area of {{ area }} square feet under {{ cost_choice }} budgeting, it will cost Rs.{{ cost }}, calculated as Rs. {{ cost_factor }} per square feet, and the cost breakdown is shown below.</h2>
     
     <img src="{{ image_url }}" alt="Pie Chart">
     
