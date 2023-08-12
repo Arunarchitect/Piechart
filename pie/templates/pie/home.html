@@ -1,82 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Costfinder Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+{% extends "../base/base.html" %}
 
-        h1 {
-            color: #040d1f;
-            margin-bottom: 10px;
-        }
+{% load static %}
+{% block content %}
+{% include "../base/navbar.html" %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<h1>Instant Solutions for your Architectural Concerns</h1>
+<h2>Find your Project Cost</h2>
+<h3>Please enter your total built-up area in square feet</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
 
-        h2 {
-            color: #666;
-            margin-top: 0;
-        }
-        
-        h3 {
-            color: #180658;
-            margin-top: 0;
-        }
-
-        form {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 400px;
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        button[type="submit"] {
-            background-color: #3366cc;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #245ea3;
-        }
-
-        /* Media Queries for Responsive Design */
-        @media screen and (max-width: 600px) {
-            form {
-                width: 90%;
-                padding: 15px;
-            }
-
-            button[type="submit"] {
-                padding: 8px 16px;
-                font-size: 14px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <h1>Instant Solutions for your Architectural Concerns</h1>
-    <h2>Find your Project Cost</h2>
-    <h3>Please enter your total built-up area in square feet</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-</body>
-</html>
+{% endblock %}

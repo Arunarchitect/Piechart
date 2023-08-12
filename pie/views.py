@@ -144,3 +144,7 @@ def r(request):
     }
 
     return render(request, 'pie/result.html', context)
+
+
+def about(request):
+    return render(request,'pie/about.html')
