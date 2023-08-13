@@ -66,7 +66,7 @@ from .forms import CostfinderForm
 from .models import Costfinder
 from django.conf import settings
 
-def h(request):
+def tools(request):
     if request.method == 'POST':
         form = CostfinderForm(request.POST)
        
@@ -112,7 +112,7 @@ def h(request):
             return redirect('result')
     else:
         form = CostfinderForm()
-    return render(request, "pie/home.html", {'form': form})
+    return render(request, "pie/tools.html", {'form': form})
 
 def r(request):
     first_costfinder_entry = Costfinder.objects.first()
@@ -148,3 +148,6 @@ def r(request):
 
 def about(request):
     return render(request,'pie/about.html')
+
+def h(request):
+    return render(request,'pie/home.html')

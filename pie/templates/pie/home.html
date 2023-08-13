@@ -3,14 +3,15 @@
 {% load static %}
 {% block content %}
 {% include "../base/navbar.html" %}
-<link rel="stylesheet" href="{% static 'css/main.css' %}">
-<h1>Instant Solutions for your Architectural Concerns</h1>
-<h2>Find your Project Cost</h2>
-<h3>Please enter your total built-up area in square feet</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+{% include "./components/splash.html" %}
+<div class="container">
+    <h1>Try our Latest Tool</h1>
+    <h2>Estimate your budget for the Project</h2>
+    <button type="button" class="btn btn-dark rounded-pill fs-8 fw-500">
+        <a href="{% url 'tools' %}" style="text-decoration: none; color: white;">
+        Try it!
 
+    </button>
+
+</div>
 {% endblock %}

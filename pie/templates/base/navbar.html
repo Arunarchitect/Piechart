@@ -1,15 +1,18 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container">
 
-      <a class="navbar-brand" href="{% url 'home' %}">Modelflick</a>
+      <a class="navbar-brand logo" href="{% url 'home' %}">Modelflick</a>
       
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarScroll">
-        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 200px;">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'tools' %}">Tools</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'about' %}">About</a>

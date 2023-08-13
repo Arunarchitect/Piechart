@@ -1,73 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Ysabeau+Infant:wght@500&display=swap');
+
+.logo{
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-weight: 400;
+    font-size: xx-large;
+}
+
+html,
+body {
+    font-family: 'Ysabeau Infant', sans-serif;
+    
+}
+
+.fw-500{
+    font-weight: 500 !important;
+
+}
 
 img {
     max-width: 100%; /* Make the image responsive */
     height: auto; /* Maintain aspect ratio */
-}
-/* Default styles */
-
-
-
-header, main {
-    padding: 20px;
-}
-
-h1 {
-    font-size: 2rem;
-}
-
-h2 {
-    font-size: 1.5rem;
-}
-
-h3 {
-    font-size: 1.2rem;
-}
-
-form {
-    margin-top: 20px;
-}
-
-button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-}
-
-/* Media queries for different screen sizes */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.2rem;
-    }
-
-    h3 {
-        font-size: 1rem;
-    }
-
-    button {
-        padding: 8px 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.2rem;
-    }
-
-    h2 {
-        font-size: 1rem;
-    }
-
-    h3 {
-        font-size: 0.9rem;
-    }
-
-    button {
-        padding: 6px 12px;
-    }
 }
