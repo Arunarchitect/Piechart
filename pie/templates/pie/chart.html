@@ -1,0 +1,13 @@
+{% extends "../base/base.html" %}
+
+{% block content %}
+{% include "../base/navbar.html" %}
+<div class="container">
+    <h1>Cost Split Bar Chart</h1>
+        <canvas id="costSplitChart"></canvas>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'pie/main.js' %}"></script>
+</div>
+{% endblock %}

@@ -128,6 +128,8 @@ def r(request):
                 'Ultra Luxury': 4000,
                 }
         cost = cost_factors[cost_choice] * area
+        cost_split_label = ['Electrical Cost', 'Plumbing Cost', 'Furnishing Cost', 'Structural Cost', 'Finishes Cost', 'Other Costs']
+        cost_split = [0.10 * cost, 0.10 * cost, 0.10 * cost, 0.25 * cost, 0.25 * cost, 0.20 * cost]
         cost_factor = cost_factors[cost_choice]
         image_url = "/media/image.png"
     else:
@@ -140,6 +142,8 @@ def r(request):
         'cost': cost,
         'cost_factor': cost_factor,
         'cost_choice': cost_choice,
+        'cost_split' : cost_split,
+        'cost_split_label' : cost_split_label,
         'image_url': image_url,
     }
 
