@@ -9,8 +9,13 @@ class Costfinder(models.Model):
         ('Luxury', 'Luxury'),
         ('Ultra Luxury', 'Ultra Luxury'),
     ]
+    OCCUPANCIES = [
+        ('Residence', 'Residence'),
+        ('Commercial', 'Commercial'),
+    ]
 
     cost_choice = models.CharField(max_length=20, choices=COST_CHOICES,  default='Medium')
+    occupancy = models.CharField(max_length=50, choices=OCCUPANCIES,  default='Residence')
     area = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     image = models.ImageField(upload_to='default/image.png', default='image.png')
 

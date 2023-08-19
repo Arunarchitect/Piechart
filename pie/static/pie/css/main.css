@@ -7,10 +7,16 @@
 }
 
 html,
-body {
+h1 {
     font-family: 'Ysabeau Infant', sans-serif;
+    color: red;
     
 }
+
+.bold-value {
+    font-weight: bold;
+    font-size: x-large;
+  }
 
 .fw-500{
     font-weight: 500 !important;

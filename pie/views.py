@@ -76,6 +76,7 @@ def tools(request):
             cleaned_data = form.cleaned_data
             cost_choice = cleaned_data['cost_choice']
             area = cleaned_data['area']
+            occupancy = cleaned_data['occupancy']
 
             cost_factors = {
                 'Ultra Low Cost': 2000,
@@ -120,13 +121,32 @@ def r(request):
     if first_costfinder_entry and first_costfinder_entry.image:
         area = first_costfinder_entry.area
         cost_choice = first_costfinder_entry.cost_choice
-        cost_factors = {
-                'Ultra Low Cost': 2000,
-                'Low Cost': 2500,
-                'Medium': 3000,
-                'Luxury': 3500,
-                'Ultra Luxury': 4000,
-                }
+        occupancy = first_costfinder_entry.occupancy
+        if occupancy == 'Residential':
+            cost_factors = {
+                'Ultra Low Cost': 1000,
+                'Low Cost': 1500,
+                'Medium': 2400,
+                'Luxury': 2800,
+                'Ultra Luxury': 3500,
+            }
+        elif occupancy == 'Commercial':
+            cost_factors = {
+                'Ultra Low Cost': 500,
+                'Low Cost':1000,
+                'Medium': 1500,
+                'Luxury': 2000,
+                'Ultra Luxury': 3000,
+            }
+        else:
+            cost_factors = {
+                'Ultra Low Cost': 1500,
+                'Low Cost': 2000,
+                'Medium': 2500,
+                'Luxury': 3000,
+                'Ultra Luxury': 3500,
+            }
+
         cost = cost_factors[cost_choice] * area
         cost_split_label = ['Electrical Cost', 'Plumbing Cost', 'Furnishing Cost', 'Structural Cost', 'Finishes Cost', 'Other Costs']
         cost_split = [0.10 * cost, 0.10 * cost, 0.10 * cost, 0.25 * cost, 0.25 * cost, 0.20 * cost]
@@ -144,7 +164,7 @@ def r(request):
         'cost_choice': cost_choice,
         'cost_split' : cost_split,
         'cost_split_label' : cost_split_label,
-        'image_url': image_url,
+        'occupancy' : occupancy,
     }
 
     return render(request, 'pie/result.html', context)

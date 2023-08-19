@@ -4,29 +4,28 @@
 {% include "../base/navbar.html" %}
 <div class="container">
     <h1>Result</h1>
-        <h2>For a total area of {{ area }} square feet under {{ cost_choice }} budgeting, it will cost Rs.{{ cost }}, calculated as Rs. {{ cost_factor }} per square feet, and the cost breakdown is shown below.</h2>
+        <p>For a total area of <strong class="bold-value">{{ area }}</strong> square feet under <strong class="bold-value">{{ cost_choice }}</strong> budgeting for a <strong class="bold-value">{{ occupancy }}</strong> building, it will cost <strong class="bold-value">Rs.{{ cost }}</strong>, calculated as <strong class="bold-value">Rs. {{ cost_factor }}</strong> per square feet, and the cost breakdown is shown below.</p>
     {% load static %}
     <canvas id="costSplitChart"></canvas>
 
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- <script src="{% static 'main.js' %}"></script> -->
-    <script>
+    <script type="text/javascript">    
         var costSplitLabel = {{ cost_split_label|safe }};
         var costSplitData = {{ cost_split|safe }};
-
-        // Prefix the rupee symbol to Y-axis tick labels
+        
+        // Prefix the rupee symbol to Y-axis tick labels and add commas
         function formatRupee(value) {
-            return '\u20B9' + value;
+            return '\u20B9' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
-
+    
         var ctx = document.getElementById('costSplitChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: costSplitLabel,
                 datasets: [{
-                    label: 'Cost Split',
                     data: costSplitData,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -48,6 +47,18 @@
                 }]
             },
             options: {
+                plugins: {
+                    legend: {
+                        display: false // Hide the legend
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return formatRupee(context.parsed.y);
+                            }
+                        }
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -61,5 +72,11 @@
             }
         });
     </script>
+    <button type="button" class="btn btn-dark rounded-pill fs-8 fw-500">
+        <a href="{% url 'home' %}" style="text-decoration: none; color: white;">
+        Try another!
+
+    </button>
+    
 </div>
 {% endblock %}
