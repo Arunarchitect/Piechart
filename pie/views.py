@@ -148,8 +148,20 @@ def r(request):
             }
 
         cost = cost_factors[cost_choice] * area
-        cost_split_label = ['Electrical Cost', 'Plumbing Cost', 'Furnishing Cost', 'Structural Cost', 'Finishes Cost', 'Other Costs']
-        cost_split = [0.10 * cost, 0.10 * cost, 0.10 * cost, 0.25 * cost, 0.25 * cost, 0.20 * cost]
+        cost_split_label = ['Design and Approval', 'Footing and Foundation', 'Roof Slab', 'Flooring and Tiling', 'Water Supply and Plumbing', 'Excavation', 'RCC Work (Pillars, Columns, Slabs)', 'Brickwork and Plastering', 'Electric Wiring', 'Doors and Windows']
+        cost_split = [
+            0.025 * cost,  # Design and Approval
+            0.125 * cost,  # Footing and Foundation
+            0.125 * cost,  # Roof Slab
+            0.1 * cost,    # Flooring and Tiling
+            0.075 * cost,  # Water Supply and Plumbing
+            0.075 * cost,  # Excavation
+            0.175 * cost,  # RCC Work (Pillars, Columns, Slabs)
+            0.125 * cost,  # Brickwork and Plastering
+            0.075 * cost,  # Electric Wiring
+            0.1 * cost     # Doors and Windows
+            ]
+
         cost_factor = cost_factors[cost_choice]
         image_url = "/media/image.png"
     else:
@@ -175,3 +187,88 @@ def about(request):
 
 def h(request):
     return render(request,'pie/home.html')
+
+
+# excel_app/views.py
+
+import xlwt
+from django.http import HttpResponse
+from .models import Costfinder  # Make sure to import your model here
+
+def export_users_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="Report.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Costfinder Data')
+
+    # Sheet header, first row
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Area in sq.ft', 'Budgeting', 'Building Type', 'Design and Approval', 'Footing and Foundation', 'Roof Slab', 'Flooring and Tiling', 'Water Supply and Plumbing', 'Excavation', 'RCC Work (Pillars, Columns, Slabs)', 'Brickwork and Plastering', 'Electric Wiring', 'Doors and Windows']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    costfinder_entries = Costfinder.objects.all()
+
+    for entry in costfinder_entries:
+        row_num += 1
+        area = entry.area
+        cost_choice = entry.cost_choice
+        occupancy = entry.occupancy
+        if occupancy == 'Residential':
+            cost_factors = {
+                'Ultra Low Cost': 1000,
+                'Low Cost': 1500,
+                'Medium': 2400,
+                'Luxury': 2800,
+                'Ultra Luxury': 3500,
+            }
+        elif occupancy == 'Commercial':
+            cost_factors = {
+                'Ultra Low Cost': 500,
+                'Low Cost': 1000,
+                'Medium': 1500,
+                'Luxury': 2000,
+                'Ultra Luxury': 3000,
+            }
+        else:
+            cost_factors = {
+                'Ultra Low Cost': 1500,
+                'Low Cost': 2000,
+                'Medium': 2500,
+                'Luxury': 3000,
+                'Ultra Luxury': 3500,
+            }
+        
+        cost = cost_factors[cost_choice] * area
+        cost_split_label = ['Design and Approval', 'Footing and Foundation', 'Roof Slab', 'Flooring and Tiling', 'Water Supply and Plumbing', 'Excavation', 'RCC Work (Pillars, Columns, Slabs)', 'Brickwork and Plastering', 'Electric Wiring', 'Doors and Windows']
+        cost_split = [
+            0.025 * cost,  # Design and Approval
+            0.125 * cost,  # Footing and Foundation
+            0.125 * cost,  # Roof Slab
+            0.1 * cost,    # Flooring and Tiling
+            0.075 * cost,  # Water Supply and Plumbing
+            0.075 * cost,  # Excavation
+            0.175 * cost,  # RCC Work (Pillars, Columns, Slabs)
+            0.125 * cost,  # Brickwork and Plastering
+            0.075 * cost,  # Electric Wiring
+            0.1 * cost     # Doors and Windows
+            ]
+        cost_factor = cost_factors[cost_choice]
+
+        data_row = [area, cost_choice, occupancy] + cost_split
+
+        for col_num in range(len(data_row)):
+            ws.write(row_num, col_num, data_row[col_num], font_style)
+
+    wb.save(response)
+
+    return response
+
