@@ -20,6 +20,8 @@
             return '\u20B9' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     
+        var totalCost = costSplitData.reduce((sum, value) => sum + value, 0);
+    
         var ctx = document.getElementById('costSplitChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
@@ -54,7 +56,9 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return formatRupee(context.parsed.y);
+                                var rupeeValue = formatRupee(context.parsed.y);
+                                var percentage = ((context.parsed.y / totalCost) * 100).toFixed(2);
+                                return rupeeValue + " (" + percentage + "%)";
                             }
                         }
                     }
@@ -72,6 +76,7 @@
             }
         });
     </script>
+    
     <button type="button" class="btn btn-dark rounded-pill fs-8 fw-500">
         <a href="{% url 'tools' %}" style="text-decoration: none; color: white;">
         Try another!
