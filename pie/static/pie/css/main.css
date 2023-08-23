@@ -27,3 +27,18 @@ img {
     max-width: 100%; /* Make the image responsive */
     height: auto; /* Maintain aspect ratio */
 }
+
+@keyframes rainbowBackground {
+    0% { background-color: red; }
+    14% { background-color: orange; }
+    28% { background-color: yellow; }
+    42% { background-color: green; }
+    57% { background-color: blue; }
+    71% { background-color: indigo; }
+    85% { background-color: violet; }
+    100% { background-color: red; }
+}
+
+.rainbow-button {
+    animation: rainbowBackground 4s infinite;
+}

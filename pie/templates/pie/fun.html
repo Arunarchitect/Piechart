@@ -1,0 +1,151 @@
+{% extends "../base/base.html" %}
+
+{% load static %}
+{% block content %}
+{% include "../base/navbar.html" %}
+<div class="container">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Split Graph using Chart.js</title>
+  </head>
+  <body>
+    <h1>Cost Split Graph Generator</h1>
+    <label for="areaInput">Enter Built-Up Area:</label>
+    <input type="number" id="areaInput">
+    <select id="buildingType">
+      <optgroup label="Building Type">
+        <option value="Residential">Residential</option>
+        <option value="Commercial">Commercial</option>
+      </optgroup>
+    </select>
+    <select id="budgetingType">
+      <optgroup label="Budgeting">
+        <option value="Ultra Low Cost">Ultra Low Cost</option>
+        <option value="Low Cost">Low Cost</option>
+        <option value="Medium">Medium</option>
+        <option value="Luxury">Luxury</option>
+        <option value="Ultra Luxury">Ultra Luxury</option>
+      </optgroup>
+    </select>
+    
+    <button id="generateButton">Generate Graph</button>
+
+    <div style="width: 80%; max-width: 600px; margin: 20px auto;">
+      <canvas id="costSplitChart"></canvas>
+    </div>
+  
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const ctx = document.getElementById('costSplitChart').getContext('2d');
+      let myChart;
+
+      const uniqueColors = [
+        'rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(75, 192, 192, 0.7)',
+        'rgba(255, 205, 86, 0.7)', 'rgba(153, 102, 255, 0.7)', 'rgba(255, 159, 64, 0.7)',
+        'rgba(23, 160, 52, 0.7)', 'rgba(255, 102, 0, 0.7)', 'rgba(135, 50, 96, 0.7)',
+        'rgba(0, 77, 77, 0.7)', 'rgba(184, 35, 99, 0.7)', 'rgba(189, 189, 189, 0.7)'
+      ];
+
+      document.getElementById('generateButton').addEventListener('click', generateGraph);
+
+      function generateGraph() {
+        const areaValue = parseFloat(document.getElementById('areaInput').value);
+        const buildingType = document.getElementById('buildingType').value;
+        const budgetingType = document.getElementById('budgetingType').value;
+        
+        const cost_factors_residential = {
+          'Ultra Low Cost': 1000,
+          'Low Cost': 1500,
+          'Medium': 2400,
+          'Luxury': 2800,
+          'Ultra Luxury': 3500,
+        };
+
+        const cost_factors_commercial = {
+          'Ultra Low Cost': 500,
+          'Low Cost': 1000,
+          'Medium': 1500,
+          'Luxury': 2000,
+          'Ultra Luxury': 3000,
+        };
+        
+        let cost_factors;
+
+        if (buildingType === 'Residential') {
+          cost_factors = cost_factors_residential;
+        } else if (buildingType === 'Commercial') {
+          cost_factors = cost_factors_commercial;
+        }
+
+        if (!isNaN(areaValue) && cost_factors) {
+          const costValue = areaValue * cost_factors[budgetingType];
+
+          const cost_split_label = [
+            'Design and Approval', 'Excavation & Site clearence', 'Footing and Foundation',
+            'RCC Work (Pillars, Columns, Slabs)', 'Brickwork and Plastering',
+            'Roof Slab', 'Flooring and Tiling', 'Water Supply and Plumbing',
+            'Electric Wiring', 'Doors and Windows', 'Painting', 'Furnishing'
+          ];
+
+          const cost_split_percentage = [
+            0.025, 0.03, 0.12, 0.10, 0.16, 0.13, 0.10, 0.05, 0.08, 0.08, 0.07, 0.055
+          ];
+
+          const cost_split = cost_split_percentage.map(percentage => costValue * percentage);
+
+          if (myChart) {
+            myChart.destroy(); // Destroy previous chart instance
+          }
+
+          myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: cost_split_label,
+              datasets: [{
+                data: cost_split,
+                backgroundColor: uniqueColors,
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Cost Split Graph'
+                },
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const value = context.parsed.y;
+                      const percentage = ((value / costValue) * 100).toFixed(2);
+                      return '\u20B9' + value.toFixed(2) + ' (' + percentage + '%)';
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function (value, index, values) {
+                      return '\u20B9' + value.toFixed(2);
+                    }
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          alert('Please enter valid values for area, building type, and budgeting type.');
+        }
+      }
+    </script>
+  </body>
+</div>
+
+{% endblock content %}
