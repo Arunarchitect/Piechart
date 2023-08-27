@@ -155,7 +155,7 @@ def fun(request):
     return render(request,'pie/fun.html')
 
 def realfun(request):
-    return render(request,'pie/realfun.html')
+    return render(request,'pie/plan.html')
 # excel_app/views.py
 
 import xlwt

@@ -5,20 +5,21 @@
 {% include "../base/navbar.html" %}
 {% include "./components/splash.html" %}
 <div class="container">
-    <h1>Try our Latest Tool</h1>
-    <h2>Estimate your budget for the Project</h2>
+    <h1>Try our Latest Tools</h1>
+
     {% load static %}
     <button type="button" class="btn btn-dark rounded-pill fs-10 fw-500" style="font-size: 16px; padding: 15px 30px;">
+        <a href="{% url 'plan' %}" style="text-decoration: none; color: white; display: block;">
+            Plan your Space!
+        </a>
+    </button>
+    <button type="button" class="btn btn-dark rounded-pill fs-10 fw-500" style="font-size: 16px; padding: 15px 30px;">
         <a href="{% url 'tools' %}" style="text-decoration: none; color: white; display: block;">
-            Try our Tool!
+            Find the Cost!
         </a>
     </button>
     
-    <button type="button" class="btn rounded-pill fs-10 fw-500 rainbow-button" style="font-size: 20px; padding: 20px 40px;">
-        <a href="{% url 'realfun' %}" style="text-decoration: none; color: white; display: block;">
-            Play instead!!!
-        </a>
-    </button>
+
 
 </div>
 {% endblock %}

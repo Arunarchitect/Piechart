@@ -1,0 +1,203 @@
+{% extends "../base/base.html" %}
+{% load static %}
+{% block content %}
+{% include "../base/navbar.html" %}
+<div class="container">
+    <head>
+        <title>Plan your Space</title>
+        <style>
+            .room-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .room-item .buttons {
+                display: flex;
+                gap: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Plan your Spaces!</h1>
+        
+        <label for="roomType">Select a room:</label>
+        <select id="roomType">
+            <option value="bedroom">Bedroom</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="dining">Dining</option>
+            <option value="living">Living</option>
+            <option value="workarea">Work Area</option>
+            <option value="bathroom">Bathroom</option>
+            <option value="verandah">Verandah</option>
+            <option value="courtyard">Courtyard</option>
+        </select>
+        
+        
+        
+        <label for="roomSubType">Select a Variant:</label>
+        <select id="roomSubType">
+            <option value="lowcost">Low Cost</option>
+            <option value="medium">Medium</option>
+            <option value="luxury">Luxury</option>
+        </select>
+        
+        <button id="addRoom">Add Room</button>
+        
+        <div id="rooms"></div>
+        
+        
+        <p id="totalArea" style="font-weight: bold; font-size: 24px;"></p>
+
+        <label for="bufferSlider">Select Buffer Percentage:</label>
+        <input type="range" id="bufferSlider" min="10" max="50" step="1" value="30">
+        <span id="bufferValue">20%</span>
+      
+        <script>
+            const roomTypeSelect = document.getElementById('roomType');
+            const roomSubTypeSelect = document.getElementById('roomSubType');
+            const addRoomButton = document.getElementById('addRoom');
+            const roomsContainer = document.getElementById('rooms');
+            const finalizeButton = document.getElementById('finalize');
+            const totalAreaDisplay = document.getElementById('totalArea');
+            const bufferSlider = document.getElementById('bufferSlider');
+            const bufferValueSpan = document.getElementById('bufferValue');
+
+            let totalArea = 0;
+            let addedRooms = {}; // To keep track of added rooms and their quantities
+            let bufferPercentage = parseInt(bufferSlider.value);
+            bufferValueSpan.textContent = `${bufferPercentage}%`;
+
+            const roomAreaMapping = {
+                bedroom: {
+                    lowcost: 100,
+                    medium: 130,
+                    luxury: 170,
+                },
+                kitchen: {
+                    lowcost: 80,
+                    medium: 120,
+                    luxury: 150,
+                },
+                dining: {
+                    lowcost: 100,
+                    medium: 150,
+                    luxury: 200,
+                },
+                living: {
+                    lowcost: 120,
+                    medium: 160,
+                    luxury: 220,
+                },
+                workarea: {
+                    lowcost: 90,
+                    medium: 110,
+                    luxury: 140,
+                },
+                bathroom: {
+                    lowcost: 60,
+                    medium: 80,
+                    luxury: 100,
+                },
+                verandah: {
+                    lowcost: 150,
+                    medium: 200,
+                    luxury: 300,
+                },
+                courtyard: {
+                    lowcost: 50,
+                    medium: 100,
+                    luxury: 150,
+                },
+            };
+
+
+            bufferSlider.addEventListener('input', () => {
+                bufferPercentage = parseInt(bufferSlider.value);
+                bufferValueSpan.textContent = `${bufferPercentage}%`;
+                updateTotalAreaDisplay();
+            });
+
+            addRoomButton.addEventListener('click', () => {
+                const selectedRoom = roomTypeSelect.value;
+                const selectedSubType = roomSubTypeSelect.value;
+                
+                const roomArea = roomAreaMapping[selectedRoom][selectedSubType];
+                
+                const roomKey = `${selectedRoom}_${selectedSubType}`;
+                
+                if (addedRooms[roomKey] === undefined) {
+                    addedRooms[roomKey] = {
+                        subType: selectedSubType,
+                        quantity: 1,
+                        area: roomArea,
+                        element: createRoomElement(selectedRoom, selectedSubType, roomArea, roomKey)
+                    };
+                    
+                    roomsContainer.appendChild(addedRooms[roomKey].element);
+                } else {
+                    addedRooms[roomKey].quantity++;
+                    addedRooms[roomKey].area += roomArea;
+                    
+                    const existingRoomElement = addedRooms[roomKey].element;
+                    existingRoomElement.querySelector('.quantity').textContent = addedRooms[roomKey].quantity;
+                    existingRoomElement.querySelector('.area').textContent = `${addedRooms[roomKey].area} sq.ft`;
+                }
+                
+                totalArea += roomArea;
+                updateTotalAreaDisplay();
+            });
+            
+            function createRoomElement(roomType, subType, area, roomKey) {
+                const roomElement = document.createElement('div');
+                roomElement.className = 'room-item';
+                roomElement.innerHTML = `
+                    <p>${roomType} (${subType}) - <span class="area">${area} sq.ft</span></p>
+                    <div class="buttons">
+                        <button class="plus-button">+</button>
+                        <button class="minus-button">-</button>
+                    </div>
+                    <p>Quantity: <span class="quantity">1</span></p>
+                `;
+                
+                const plusButton = roomElement.querySelector('.plus-button');
+                plusButton.addEventListener('click', () => {
+                    addedRooms[roomKey].quantity++;
+                    addedRooms[roomKey].area += area;
+                    roomElement.querySelector('.quantity').textContent = addedRooms[roomKey].quantity;
+                    roomElement.querySelector('.area').textContent = `${addedRooms[roomKey].area} sq.ft`;
+                    totalArea += area;
+                    updateTotalAreaDisplay();
+                });
+
+                const minusButton = roomElement.querySelector('.minus-button');
+                minusButton.addEventListener('click', () => {
+                    if (addedRooms[roomKey].quantity > 1) {
+                        addedRooms[roomKey].quantity--;
+                        addedRooms[roomKey].area -= area;
+                        roomElement.querySelector('.quantity').textContent = addedRooms[roomKey].quantity;
+                        roomElement.querySelector('.area').textContent = `${addedRooms[roomKey].area} sq.ft`;
+                        totalArea -= area;
+                        updateTotalAreaDisplay();
+                    } else {
+                        delete addedRooms[roomKey];
+                        roomsContainer.removeChild(roomElement);
+                        totalArea -= area;
+                        updateTotalAreaDisplay();
+                    }
+                });
+                
+                return roomElement;
+            }
+            
+            function updateTotalAreaDisplay() {
+                const totalAreaWithBuffer = totalArea + totalArea * (bufferPercentage / 100);
+                totalAreaDisplay.textContent = `The total area is ${totalAreaWithBuffer} sq.ft , including a ${bufferPercentage}% buffer for wall thickness and circulation spaces.`;
+                
+            }
+            
+            finalizeButton.addEventListener('click', () => {
+                updateTotalAreaDisplay();
+            });
+        </script>
+    </body>
+{% endblock content %}
